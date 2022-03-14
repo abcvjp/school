@@ -1,0 +1,47 @@
+version: "3.9"
+services:
+  proxy:
+    depends_on:
+      - api
+      - dbadmin
+    build: ./proxy
+    ports:
+      - 80:80
+    networks:
+      - backend
+    environment:
+      APP_SERVER_NAME: abcmall.local
+      APP_SERVER_ADDR: http://app:3000
+      ADMIN_SERVER_NAME: admin.abcmall.local
+      ADMIN_SERVER_ADDR: http://admin:3000
+      API_SERVER_NAME: api.abcmall.local
+      API_SERVER_ADDR: http://api:3000
+  api:
+    depends_on:
+      - db
+    build:
+      context: ./api
+      dockerfile: Dockerfile.prod
+    expose:
+      - 3000
+    networks:
+      - backend
+    env_file:
+      - ./api/.env
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DB_HOST: db
+      DB_NAME: abcmall_db
+      DB_USERNAME: hoaideptrai
+      DB_PASSWORD: 123456
+      JWT_ACCESS_TOKEN_SECRET: Ysg$fG&DG
+      JWT_REFRESH_TOKEN_SECRET: Txlcvkb^32y
+volumes:
+  db-data:
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  postgres:

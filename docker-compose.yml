@@ -1,0 +1,56 @@
+version: "3.9"
+services:
+  proxy:
+    depends_on:
+      - api
+    build: ./proxy
+    ports:
+      - 80:80
+    networks:
+      - backend
+    environment:
+      API_SERVER_NAME: api.school.local
+      API_SERVER_ADDR: http://api:3000
+  api:
+    depends_on:
+      - db
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    expose:
+      - 3000
+    volumes:
+      - ./api:/workdir
+      - /workdir/node_modules
+    networks:
+      - backend
+    env_file:
+      - ./api/.env
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DB_TYPE: mongo
+      DB_HOST: db
+      DB_PORT: 27017
+      DB_USER: admin
+      DB_PASS: 123456
+      DB_NAME: school
+  db:
+    image: mongo:5.0
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+    volumes:
+      - school-db:/data/db
+    networks:
+      - backend
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+      - MONGO_INITDB_DATABASE=school
+networks:
+  backend:
+    driver: bridge
+volumes:
+  school-db:
