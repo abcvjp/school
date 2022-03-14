@@ -1,11 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Document } from 'mongoose';
 
-export type UserRole = 'admin' | 'seller' | 'user';
+export type UserRole = 'admin' | 'user';
 
 @Schema()
 export class User extends Document {
+  @ApiProperty({
+    description: 'The role of the User',
+    enum: ['admin', 'user'],
+  })
   @Prop({
     type: String,
     required: true,
@@ -14,6 +19,10 @@ export class User extends Document {
   })
   role: UserRole;
 
+  @ApiProperty({
+    description: 'Indicate whether the user is lock or not',
+    example: true,
+  })
   @Prop({
     type: String,
     required: true,
@@ -21,12 +30,20 @@ export class User extends Document {
   })
   isEnabled: boolean;
 
+  @ApiProperty({
+    description: 'The full name of the User',
+    example: 'Nguyen Van A',
+  })
   @Prop({
     type: String,
     required: true,
   })
   fullName: string;
 
+  @ApiProperty({
+    description: 'The email of the User',
+    example: 'abc@ekoios.vn',
+  })
   @Prop({
     type: String,
     required: true,
@@ -34,6 +51,10 @@ export class User extends Document {
   })
   email: string;
 
+  @ApiProperty({
+    description: 'The phone number of the User',
+    example: '+84363123456',
+  })
   @Prop({
     type: String,
     required: true,
@@ -47,6 +68,10 @@ export class User extends Document {
   @Exclude()
   passwordHash: string;
 
+  @ApiProperty({
+    description: 'The avatar url of the User',
+    example: '/my-avatar.jpg',
+  })
   @Prop({
     type: String,
   })

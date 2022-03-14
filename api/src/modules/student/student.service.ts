@@ -54,7 +54,7 @@ export class StudentService {
     return createdStudent;
   }
 
-  async update(id: string, dto: CreateStudentDto) {
+  async update(id: string, dto: CreateStudentDto): Promise<IStudent> {
     const existingStudent = await this.studentModel.findById(id);
     if (!existingStudent) {
       throw new NotFoundException('Student not found');
