@@ -16,7 +16,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Public()
   @Post('login')
-  async login(@Request() req, @Body() dto: LoginDto) {
+  async login(@Request() req, @Body() dto: LoginDto) { // eslint-disable-line
     return this.authService.login(req.user);
   }
 }

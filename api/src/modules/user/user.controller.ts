@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Request,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -15,9 +16,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './schemas/user.schema';
+import { User, UserRole } from './schemas/user.schema';
 import { UserService } from './user.service';
 
 @ApiTags('users')
@@ -46,8 +48,9 @@ export class UserController {
     type: [User],
   })
   @ApiBearerAuth()
+  @Roles(UserRole.Admin)
   @Get()
-  findAll() {
+  findAll(@Request() req) {
     return this.userService.findAll();
   }
 
@@ -58,7 +61,7 @@ export class UserController {
     description: 'The created User',
     type: User,
   })
-  @ApiBearerAuth()
+  @Public()
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
@@ -84,6 +87,7 @@ export class UserController {
     description: 'The User has been delete successfully',
   })
   @ApiBearerAuth()
+  @Roles(UserRole.Admin)
   @Delete(':id')
   deleteOne(@Param('id') id: string) {
     return this.userService.deleteOne(id);

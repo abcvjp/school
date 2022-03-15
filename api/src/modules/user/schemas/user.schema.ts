@@ -3,7 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Document } from 'mongoose';
 
-export type UserRole = 'admin' | 'user';
+export enum UserRole {
+  User = 'user',
+  Admin = 'admin',
+}
 
 @Schema()
 export class User extends Document {

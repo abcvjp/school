@@ -20,6 +20,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Class } from './schemas/class.schema';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { UserRole } from '../user/schemas/user.schema';
 
 @ApiTags('class')
 @Controller('class')
@@ -60,6 +62,7 @@ export class ClassController {
     type: Class,
   })
   @ApiBearerAuth()
+  @Roles(UserRole.Admin)
   @Post()
   create(@Body() createClassDto: CreateClassDto) {
     return this.classService.create(createClassDto);
@@ -73,6 +76,7 @@ export class ClassController {
     type: Class,
   })
   @ApiBearerAuth()
+  @Roles(UserRole.Admin)
   @Put(':id')
   update(@Param('id') id: string, @Body() updateClassDto: CreateClassDto) {
     return this.classService.update(id, updateClassDto);
@@ -85,6 +89,7 @@ export class ClassController {
     description: 'The Class has been deleted successfully',
   })
   @ApiBearerAuth()
+  @Roles(UserRole.Admin)
   @Delete(':id')
   deleteOne(@Param('id') id: string) {
     return this.classService.deleteOne(id);

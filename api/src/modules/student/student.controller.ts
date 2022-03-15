@@ -16,6 +16,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { UserRole } from '../user/schemas/user.schema';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { FindAllStudentQueryDto } from './dto/find-all-student-query.dto';
 import { Student } from './schemas/student.schema';
@@ -60,6 +62,7 @@ export class StudentController {
     type: Student,
   })
   @ApiBearerAuth()
+  @Roles(UserRole.Admin)
   @Post()
   create(@Body() createStudentDto: CreateStudentDto) {
     return this.studentService.create(createStudentDto);
@@ -73,6 +76,7 @@ export class StudentController {
     type: Student,
   })
   @ApiBearerAuth()
+  @Roles(UserRole.Admin)
   @Put(':id')
   update(@Param('id') id: string, @Body() updateStudentDto: CreateStudentDto) {
     return this.studentService.update(id, updateStudentDto);
@@ -85,6 +89,7 @@ export class StudentController {
     description: 'The user has been deleted successfully',
   })
   @ApiBearerAuth()
+  @Roles(UserRole.Admin)
   @Delete(':id')
   deleteOne(@Param('id') id: string) {
     return this.studentService.deleteOne(id);
