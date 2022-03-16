@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
 import { Document } from 'mongoose';
+import { ExcludeProperty } from 'nestjs-mongoose-exclude';
 
 export enum UserRole {
   User = 'user',
@@ -68,7 +68,7 @@ export class User extends Document {
   @Prop({
     type: String,
   })
-  @Exclude()
+  @ExcludeProperty()
   passwordHash: string;
 
   @ApiProperty({

@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Request,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -15,6 +16,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { SanitizeMongooseModelInterceptor } from 'nestjs-mongoose-exclude';
 import { Public } from 'src/common/decorators/public.decorator';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,6 +26,12 @@ import { UserService } from './user.service';
 
 @ApiTags('users')
 @Controller('user')
+@UseInterceptors(
+  new SanitizeMongooseModelInterceptor({
+    excludeMongooseId: false,
+    excludeMongooseV: true,
+  }),
+)
 export class UserController {
   constructor(private userService: UserService) {}
 
@@ -50,7 +58,7 @@ export class UserController {
   @ApiBearerAuth()
   @Roles(UserRole.Admin)
   @Get()
-  findAll(@Request() req) {
+  findAll() {
     return this.userService.findAll();
   }
 

@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateClassDto } from './dto/create-class.dto';
 import { ClassService } from './class.service';
@@ -22,9 +23,16 @@ import {
 import { Class } from './schemas/class.schema';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { UserRole } from '../user/schemas/user.schema';
+import { SanitizeMongooseModelInterceptor } from 'nestjs-mongoose-exclude';
 
 @ApiTags('class')
 @Controller('class')
+@UseInterceptors(
+  new SanitizeMongooseModelInterceptor({
+    excludeMongooseId: false,
+    excludeMongooseV: true,
+  }),
+)
 export class ClassController {
   constructor(private classService: ClassService) {}
 

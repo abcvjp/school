@@ -3,7 +3,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
 import { Class, ClassSchema } from 'src/modules/class/schemas/class.schema';
 
-@Schema()
+@Schema({
+  versionKey: false,
+})
 export class Student extends Document {
   @ApiProperty({
     description: 'The full name of the Student',

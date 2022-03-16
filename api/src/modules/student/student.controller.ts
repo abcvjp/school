@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -15,6 +16,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { SanitizeMongooseModelInterceptor } from 'nestjs-mongoose-exclude';
 import { Public } from 'src/common/decorators/public.decorator';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { UserRole } from '../user/schemas/user.schema';
@@ -25,6 +27,12 @@ import { StudentService } from './student.service';
 
 @ApiTags('student')
 @Controller('student')
+@UseInterceptors(
+  new SanitizeMongooseModelInterceptor({
+    excludeMongooseId: false,
+    excludeMongooseV: true,
+  }),
+)
 export class StudentController {
   constructor(private studentService: StudentService) {}
 

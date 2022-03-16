@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, FilterQuery } from 'mongoose';
 import { Class } from '../class/schemas/class.schema';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { IStudent } from './interfaces/student.interface';
@@ -25,15 +25,18 @@ export class StudentService {
   }
 
   async findAll(query: FindAllStudentQueryDto): Promise<IStudent[]> {
-    const { startId, skip, limit, sort } = query;
+    const { startId, skip, limit, sort, classId, className } = query;
+
+    const filters: FilterQuery<Class> = startId
+      ? {
+          _id: { $gt: startId },
+        }
+      : {};
+    classId && (filters['class._id'] = classId);
+    className && (filters['class.name'] = className);
+
     const dbQuery = this.studentModel
-      .find(
-        startId
-          ? {
-              _id: { $gt: startId },
-            }
-          : {},
-      )
+      .find(filters)
       .sort(sort ? sort : { _id: 1 })
       .skip(skip)
       .limit(limit);
