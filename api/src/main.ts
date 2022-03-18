@@ -6,24 +6,27 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SortQueryPipe } from './common/pipes/sort-query.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = app.get(ConfigService);
 
-  app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({
-      forbidUnknownValues: true,
+      // forbidUnknownValues: true,
+      // forbidNonWhitelisted: true,
       transform: true,
       transformOptions: { enableImplicitConversion: true },
       enableDebugMessages:
         config.get('app.environment') === 'development' ? true : false,
     }),
   );
+  app.useGlobalPipes(new SortQueryPipe());
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.enableCors();
 
   // SWAGGER
   const document = SwaggerModule.createDocument(

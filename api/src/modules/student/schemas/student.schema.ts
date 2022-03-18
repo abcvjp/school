@@ -2,11 +2,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
 import { Class, ClassSchema } from 'src/modules/class/schemas/class.schema';
+import { IStudent } from '../interfaces/student.interface';
 
 @Schema({
   versionKey: false,
 })
-export class Student extends Document {
+export class Student extends Document implements IStudent {
   @ApiProperty({
     description: 'The full name of the Student',
     example: 'Nguyen Van A',

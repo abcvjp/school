@@ -1,8 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateClassDto } from './dto/create-class.dto';
-import { IClass } from './interfaces/class.interface';
 import { Class } from './schemas/class.schema';
 import mongoose from 'mongoose';
 import { Student } from '../student/schemas/student.schema';
@@ -16,7 +19,7 @@ export class ClassService {
     @InjectConnection() private readonly dbConnection: mongoose.Connection,
   ) {}
 
-  async findOne(id: string): Promise<IClass> {
+  async findOne(id: string): Promise<Class> {
     const foundClass = await this.classModel.findById(id).exec();
     if (!foundClass) {
       throw new NotFoundException('Class not found');
@@ -24,7 +27,7 @@ export class ClassService {
     return foundClass;
   }
 
-  async findAll(query: FindAllClassQueryDto): Promise<IClass[]> {
+  async findAll(query: FindAllClassQueryDto): Promise<Class[]> {
     const { startId, skip, limit, sort } = query;
     const dbQuery = this.classModel
       .find(
@@ -40,15 +43,19 @@ export class ClassService {
     return await dbQuery.exec();
   }
 
-  async create(dto: CreateClassDto): Promise<IClass> {
+  async create(dto: CreateClassDto): Promise<Class> {
     const { name } = dto;
+    const classByName = await this.classModel.findOne({ name }).exec();
+    if (classByName) {
+      throw new ConflictException('This class is already exist');
+    }
     const createdClass = await this.classModel.create({
       name,
     });
     return createdClass;
   }
 
-  async update(id: string, dto: CreateClassDto): Promise<IClass> {
+  async update(id: string, dto: CreateClassDto): Promise<Class> {
     const existingClass = await this.classModel.findById(id);
     if (!existingClass) {
       throw new NotFoundException('Class not found');
@@ -93,6 +100,7 @@ export class ClassService {
     if (!foundClass) {
       throw new NotFoundException('Class not found');
     }
+
     await foundClass.delete();
     await this.studentModel.deleteMany({ 'class._id': id });
 

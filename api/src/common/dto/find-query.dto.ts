@@ -1,5 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsMongoId, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsMongoId, IsOptional, IsString, Min } from 'class-validator';
+
+export class NumberFilter {
+  @IsOptional()
+  @IsInt()
+  readonly gte: number;
+
+  @IsOptional()
+  @IsInt()
+  readonly lte: number;
+
+  @IsOptional()
+  @IsInt()
+  readonly gt: number;
+
+  @IsOptional()
+  @IsInt()
+  readonly lt: number;
+}
 
 export class FindQueryDto {
   @ApiProperty({
@@ -27,6 +45,7 @@ export class FindQueryDto {
   })
   @IsOptional()
   @IsInt()
+  @Min(1)
   readonly limit: number;
 
   @ApiProperty({
