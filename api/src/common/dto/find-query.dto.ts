@@ -1,24 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsMongoId, IsOptional, IsString, Min } from 'class-validator';
 
-export class NumberFilter {
-  @IsOptional()
-  @IsInt()
-  readonly gte: number;
-
-  @IsOptional()
-  @IsInt()
-  readonly lte: number;
-
-  @IsOptional()
-  @IsInt()
-  readonly gt: number;
-
-  @IsOptional()
-  @IsInt()
-  readonly lt: number;
-}
-
 export class FindQueryDto {
   @ApiProperty({
     description: 'Id of the first record to find from',

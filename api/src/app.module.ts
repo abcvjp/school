@@ -13,9 +13,11 @@ import { UserModule } from './modules/user/user.module';
 import { StudentModule } from './modules/student/student.module';
 import { ClassModule } from './modules/class/class.module';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuards } from './auth/guards/roles.guard';
+import { AllExceptionsFilter } from './common/filters/global-exception.filter';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 @Module({
   imports: [
@@ -38,6 +40,14 @@ import { RolesGuards } from './auth/guards/roles.guard';
     {
       provide: APP_GUARD,
       useClass: RolesGuards,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
     },
   ],
 })

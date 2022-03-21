@@ -3,7 +3,6 @@ import { AppModule } from './app.module';
 
 import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { SortQueryPipe } from './common/pipes/sort-query.pipe';
@@ -15,8 +14,8 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
-      // forbidUnknownValues: true,
-      // forbidNonWhitelisted: true,
+      forbidUnknownValues: true,
+      forbidNonWhitelisted: true,
       transform: true,
       transformOptions: { enableImplicitConversion: true },
       enableDebugMessages:
@@ -24,8 +23,9 @@ async function bootstrap() {
     }),
   );
   app.useGlobalPipes(new SortQueryPipe());
+
   app.useGlobalInterceptors(new TransformInterceptor());
-  app.useGlobalFilters(new HttpExceptionFilter());
+
   app.enableCors();
 
   // SWAGGER
