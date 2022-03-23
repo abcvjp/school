@@ -6,13 +6,13 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { ErrorResponse } from '../respones';
+import { ICustomException } from '../exceptions/custom-exception.interface';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
-  catch(exception: unknown, host: ArgumentsHost): void {
+  catch(exception: ICustomException, host: ArgumentsHost): void {
     // In certain situations `httpAdapter` might not be available in the
     // constructor method, thus we should resolve it here.
     const { httpAdapter } = this.httpAdapterHost;
@@ -23,13 +23,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
-    const path = httpAdapter.getRequestUrl(ctx.getRequest());
-
-    const responseBody = new ErrorResponse(
-      'Internal server error',
-      path,
-      httpStatus,
-    );
+    const responseBody = exception.getResponse();
 
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
   }

@@ -10,6 +10,8 @@ import { Class } from './schemas/class.schema';
 import mongoose from 'mongoose';
 import { Student } from '../student/schemas/student.schema';
 import { FindAllClassQueryDto } from './dto/find-all-class-query.dto';
+import { Logger } from 'src/logger/logger.decorator';
+import { MyLogger } from 'src/logger/my-logger.service';
 
 @Injectable()
 export class ClassService {
@@ -17,6 +19,7 @@ export class ClassService {
     @InjectModel(Class.name) private readonly classModel: Model<Class>,
     @InjectModel(Student.name) private readonly studentModel: Model<Student>,
     @InjectConnection() private readonly dbConnection: mongoose.Connection,
+    @Logger('ClassService') private readonly logger: MyLogger,
   ) {}
 
   async findOne(id: string): Promise<Class> {

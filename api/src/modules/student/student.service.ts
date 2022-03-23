@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  LoggerService,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateStudentDto } from './dto/create-student.dto';
@@ -12,6 +17,8 @@ import {
 } from 'src/common/constants';
 import mongoose from 'mongoose';
 import { ClassService } from '../class/class.service';
+import { Logger } from 'src/logger/logger.decorator';
+import { MyLogger } from 'src/logger/my-logger.service';
 
 @Injectable()
 export class StudentService {
@@ -19,6 +26,7 @@ export class StudentService {
     @InjectModel(Student.name) private readonly studentModel: Model<Student>,
     @InjectConnection() private readonly dbConnection: mongoose.Connection,
     private readonly classService: ClassService,
+    @Logger('StudentService') private readonly logger: MyLogger,
   ) {}
 
   async findOne(id: string): Promise<IStudent> {

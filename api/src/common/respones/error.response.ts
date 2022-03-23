@@ -12,7 +12,7 @@ export class ErrorResponse {
     code?: HttpStatus,
     timestamp?: string,
   ) {
-    this.code = code ? code : 1;
+    this.code = code ? code : HttpStatus.INTERNAL_SERVER_ERROR;
     this.message = message;
     this.path = path;
     this.timestamp = timestamp ? timestamp : new Date().toISOString();

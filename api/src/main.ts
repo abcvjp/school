@@ -3,12 +3,13 @@ import { AppModule } from './app.module';
 
 import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { SortQueryPipe } from './common/pipes/sort-query.pipe';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: false, // not using custom logger to log while bootstrapping
+  });
 
   const config = app.get(ConfigService);
 
@@ -23,8 +24,6 @@ async function bootstrap() {
     }),
   );
   app.useGlobalPipes(new SortQueryPipe());
-
-  app.useGlobalInterceptors(new TransformInterceptor());
 
   app.enableCors();
 
