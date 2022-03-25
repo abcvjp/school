@@ -7,6 +7,7 @@ import { AppController } from './app.controller';
 
 import appConfig from './config/app.config';
 import dbConfig from './config/db.config';
+import workerConfig from './config/worker.config';
 
 import { DatabaseModule } from './database';
 import { UserModule } from './modules/user/user.module';
@@ -25,7 +26,7 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [appConfig, dbConfig],
+      load: [appConfig, dbConfig, workerConfig],
     }),
     LoggerModule.register(),
     DatabaseModule,

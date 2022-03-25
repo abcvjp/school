@@ -1,11 +1,14 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { hashPassword } from 'src/utils/password';
+import { MAILER_SERVICE } from 'src/workers/mailer';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IUser } from './interfaces/user.interface';
@@ -15,6 +18,7 @@ import { User } from './schemas/user.schema';
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
+    @Inject(MAILER_SERVICE) private readonly mailerService: ClientKafka,
   ) {}
 
   async findOne(id: string): Promise<IUser> {
