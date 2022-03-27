@@ -1,4 +1,5 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { EventPattern } from '@nestjs/microservices';
 import { AppService } from './app.service';
 
 @Controller()
@@ -10,8 +11,8 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Post()
-  sendMail() {
-    return this.appService.sendMail();
+  @EventPattern('user_created')
+  async handleUserCreated(data: any) {
+    await this.appService.sendMail(data.value);
   }
 }

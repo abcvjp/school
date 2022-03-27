@@ -1,12 +1,12 @@
 import { ConfigService } from '@nestjs/config';
-import { ClientProxyFactory } from '@nestjs/microservices';
+import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 
 export const MAILER_SERVICE = 'MAILER_SERVICE';
-export const MailerService = {
+export const MailerProvider = {
   provide: MAILER_SERVICE,
   useFactory: (configService: ConfigService) => {
     const options = configService.get('worker.mailer');
-    return ClientProxyFactory.create(options);
+    return ClientProxyFactory.create({ transport: Transport.KAFKA, options });
   },
   inject: [ConfigService],
 };

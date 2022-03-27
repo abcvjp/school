@@ -9,13 +9,14 @@ export class AppService {
     return 'Hello World!';
   }
 
-  async sendMail() {
-    return await this.mailerService.sendMail({
-      to: 'to@example.com', // list of receivers
+  async sendMail(user: any): Promise<void> {
+    const { email, fullName } = user;
+    await this.mailerService.sendMail({
+      to: email, // list of receivers
       from: 'hoaideptrai@example.com', // sender address
-      subject: 'Testing Nest MailerModule ✔', // Subject line
-      text: 'welcome', // plaintext body
-      html: '<b>welcome</b>', // HTML body content
+      subject: 'Your account has been registered successfully', // Subject line
+      // text: 'welcome', // plaintext body
+      html: `<b>welcome to my world, ${fullName}</b>`, // HTML body content
     });
   }
 }

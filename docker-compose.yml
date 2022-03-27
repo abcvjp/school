@@ -1,14 +1,5 @@
 version: "3.9"
 services:
-  proxy:
-    depends_on:
-      - api
-    build: ./proxy
-    ports:
-      - 80:80
-    environment:
-      API_SERVER_NAME: api.school.local
-      API_SERVER_ADDR: http://api:3000
   api:
     depends_on:
       - db
@@ -16,8 +7,8 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    expose:
-      - 3000
+    ports:
+      - 3000:3000
     volumes:
       - ./api:/workdir
       - /workdir/node_modules
@@ -49,7 +40,7 @@ services:
       - 3001:3000
     volumes:
       - ./workers/mailer:/workdir
-      # - /workdir/node_modules
+      - /workdir/node_modules
     env_file:
       - ./api/.env
     environment:
@@ -86,17 +77,17 @@ services:
     expose:
       - 29092
   
-  # kafka-ui:
-    # image: provectuslabs/kafka-ui
-    # depends_on:
-      # - kafka
-      # - kafka-zookeeper
-    # ports:
-      # - 9000:8080
-    # environment:
-      # # - KAFKA_CLUSTERS_0_NAME=local
-      # KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
-      # KAFKA_CLUSTERS_0_ZOOKEEPER: kafka-zookeeper:2181
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    depends_on:
+      - kafka
+      - kafka-zookeeper
+    ports:
+      - 9000:8080
+    environment:
+      # - KAFKA_CLUSTERS_0_NAME=local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: kafka-zookeeper:2181
       
 volumes:
   school-db:
